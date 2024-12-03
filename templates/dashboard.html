@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %} Todo Application with Flask {% endblock %}
+
+{% block content %}
+
+{% include 'header.html' %}
+{% include 'navigation.html' %}
+{% include 'message.html' %}
+
+<style>
+    .strikethrough {
+        text-decoration: line-through;
+    }
+</style>
+
+<br>
+<div class="w3-container w3-auto">
+    {% if todos | length > 0 %}
+    {% for todo in todos %}
+    {% set is_done = todo.is_done %}
+    {% set updated_date = todo.updated_at.astimezone(now.tzinfo) %}
+    {% set is_older_than_7_days = (now - updated_date).days > 7 %}
+
+    <div class="todo_list w3-panel w3-border w3-round w3-card w3-display-container w3-leftbar w3-rightbar
+                        {% if is_done %}
+                            w3-pale-green w3-border-green
+                        {% elif is_older_than_7_days and not is_done %}
+                            w3-pale-red w3-border-red
+                        {% else %}
+                            w3-pale-blue w3-border-blue
+                        {% endif %}">
+
+                <span class="w3-display-topright">
+                    {% if is_done %}
+                        <a class="w3-button" href="{{ url_for('todo.action_todo', todo_id=todo.id, action='open') }}">
+                            <img src="static/images/open.png" width="20" title="Open Todo">
+                        </a>
+                    {% else %}
+                        <a class="w3-button" href="{{ url_for('todo.action_todo', todo_id=todo.id, action='close') }}">
+                            <img src="static/images/close.png" width="20" title="Close Todo">
+                        </a>
+                    {% endif %}
+
+                    <a class="w3-button" href="{{ url_for('todo.update_todo', todo_id=todo.id) }}">
+                        <img src="static/images/update.png" width="20" title="Update Todo">
+                    </a>
+
+                    <a class="w3-button" href="{{ url_for('todo.action_todo', todo_id=todo.id, action='delete') }}">
+                        <img src="static/images/delete.png" width="20" title="Delete Todo">
+                    </a>
+                </span>
+
+        <h3 class="{% if is_done %}strikethrough{% endif %}">{{ todo.title }}</h3>
+        <p class="w3-cursive">{{ todo.description }}</p>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="w3-panel w3-border w3-round w3-card w3-leftbar w3-rightbar w3-pale-yellow w3-border-yellow">
+        <h2 class="w3-center">No data found!</h2>
+    </div>
+    {% endif %}
+</div>
+
+
+{% endblock %}

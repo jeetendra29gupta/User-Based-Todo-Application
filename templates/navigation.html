@@ -1,0 +1,19 @@
+<div class="w3-bar w3-black w3-card w3-center w3-round">
+    {% if 'user_name' in session %}
+    <a href="/dashboard" class="w3-bar-item w3-button">Dashboard</a>
+    <a href="/add_todo" class="w3-bar-item w3-button">Add Todo</a>
+    <input type="text" class="w3-bar-item w3-input w3-light-grey" placeholder="Search Todo.." onkeyup="search_todo()"
+           id="search_todo_input">
+    {% else %}
+    <a href="/login" class="w3-bar-item w3-button">Login</a>
+    {% endif %}
+
+    {% if 'user_name' not in session %}
+    <a href="/signup" class="w3-bar-item w3-button w3-right">Signup</a>
+    {% else %}
+    <a href="/logout" class="w3-bar-item w3-button w3-right">Logout</a>
+    <a href="/profile" class="w3-bar-item w3-button w3-right">{{user}}</a>
+    {% endif %}
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
